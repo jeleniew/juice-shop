@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/start_navigation"
+    app:startDestination="@+id/loading">
+
+    <fragment
+        android:id="@+id/loading"
+        android:name="com.example.juiceshop.ui.start.LoadingFragment"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/loading_failed"
+        android:name="com.example.juiceshop.ui.start.LoadingFailedFragment"
+        tools:layout="@layout/fragment_dashboard" />
+</navigation>
