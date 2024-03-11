@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.juiceshop.R
 
-class ShopItemAdapter(private val context: Context, private val itemList: List<ShopItem>): RecyclerView.Adapter<ShopItemAdapter.ShopItemViewHolder>() {
+class ShopItemAdapter(private val context: Context, private var itemList: List<ShopItem>): RecyclerView.Adapter<ShopItemAdapter.ShopItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopItemViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.shop_item, parent, false)
@@ -26,6 +26,11 @@ class ShopItemAdapter(private val context: Context, private val itemList: List<S
         return itemList.size
     }
 
+    fun updateProducts(products: ArrayList<ShopItem>) {
+        itemList = products
+        notifyDataSetChanged()
+    }
+
     inner class ShopItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val nameTextView: TextView = itemView.findViewById(R.id.item_name)
         private val priceTextView: TextView = itemView.findViewById(R.id.item_price)
@@ -38,9 +43,8 @@ class ShopItemAdapter(private val context: Context, private val itemList: List<S
             if (imageResourceId != 0) {
                 imageView.setImageResource(imageResourceId)
             } else {
-                Log.d("debug", "failed to set the image: ${item.image} with identifier $imageResourceId")
+                Log.d("debug", "failed to set the image: ${item.image}")
             }
-            Log.d("debug", "package ${itemView.context.packageName}")
         }
     }
 }

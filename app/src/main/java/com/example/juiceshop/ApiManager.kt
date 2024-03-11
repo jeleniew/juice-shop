@@ -43,6 +43,34 @@ class ApiManager {
             return shopItemList;
         }
 
+        fun getProducts(name: String, onSuccess: (json: String?) -> Unit, onFail: (code: Int, message: String) -> Unit): List<ShopItem> {
+            var shopItemList = ArrayList<ShopItem>()
+
+            requestProducts(name, object : Callback {
+
+                override fun onFailure(call: Call, e: IOException) {
+                    Log.d("debug", "Exception: $e")
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    Log.d("debug", "Response: $response")
+                    var responseBody = response.body?.string()
+                    var statusCode = response.code
+                    var responseMessage = response.message
+
+                    var data = JSONObject(responseBody).get("data").toString()
+
+                    when (statusCode) {
+                        200 -> { onSuccess(data) }
+                        else -> onFail(statusCode, responseMessage)//Log.d("debug", "failed with response code: " + statusCode + " and message: " + response.message)
+                    }
+                }
+
+            })
+
+            return shopItemList;
+        }
+
         private fun requestAllProducts(callback: Callback) {
             var url = URL + "rest/products/search?"
             var client = OkHttpClient()
@@ -53,5 +81,14 @@ class ApiManager {
             client.newCall(request).enqueue(callback)
         }
 
+        private fun requestProducts(name: String, callback: Callback) {
+            var url = URL + "rest/products/search?q=" + name
+            var client = OkHttpClient()
+            var request = Request.Builder()
+                .url(url)
+                .get()
+                .build()
+            client.newCall(request).enqueue(callback)
+        }
     }
 }
