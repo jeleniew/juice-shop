@@ -15,5 +15,42 @@
         android:id="@+id/navigation_dashboard"
         android:name="com.example.juiceshop.ui.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_dashboard">
+
+        <action
+            android:id="@+id/action_dashboard_to_login"
+            app:destination="@id/navigation_login" />
+        <action
+            android:id="@+id/action_dashboard_to_register"
+            app:destination="@id/navigation_register"/>
+        <action
+            android:id="@+id/action_dashboard_to_dashboard"
+            app:destination="@id/navigation_dashboard"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_login"
+        android:name="com.example.juiceshop.ui.login.LoginFragment"
+        android:label="@string/title_login"
+        tools:layout="@layout/fragment_home">
+
+        <action
+            android:id="@+id/action_login_to_register"
+            app:destination="@id/navigation_register" />
+        <action
+            android:id="@+id/action_login_to_dashboard"
+            app:destination="@id/navigation_dashboard"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_register"
+        android:name="com.example.juiceshop.ui.login.RegistrationFragment"
+        android:label="@string/title_registration"
+        tools:layout="@layout/fragment_home">
+
+        <action
+            android:id="@+id/action_register_to_login"
+            app:destination="@id/navigation_login" />
+    </fragment>
+
 </navigation>
