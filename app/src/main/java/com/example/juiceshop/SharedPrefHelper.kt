@@ -18,18 +18,18 @@ object SharedPrefHelper {
     var email: String?
         get() = sharedPreferences.getString(KEY_EMAIL, null)
         set(value) {
-            sharedPreferences.edit().putString(KEY_EMAIL, value)
+            sharedPreferences.edit().putString(KEY_EMAIL, value).apply()
         }
 
     var password: String?
         get() = sharedPreferences.getString(KEY_PASSWORD, null)
         set(value) {
-            sharedPreferences.edit().putString(KEY_PASSWORD, value)
+            sharedPreferences.edit().putString(KEY_PASSWORD, value).apply()
         }
 
     var token: String?
         get() = sharedPreferences.getString(TOKEN, null)
         set(value) {
-            sharedPreferences.edit().putString(TOKEN, value)
+            sharedPreferences.edit().putString(TOKEN, value).apply()
         }
 }
