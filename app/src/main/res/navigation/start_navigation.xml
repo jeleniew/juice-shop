@@ -7,11 +7,11 @@
 
     <fragment
         android:id="@+id/loading"
-        android:name="com.example.juiceshop.ui.start.LoadingFragment"
+        android:name="com.example.juiceshop.fragment.LoadingFragment"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/loading_failed"
-        android:name="com.example.juiceshop.ui.start.LoadingFailedFragment"
+        android:name="com.example.juiceshop.fragment.LoadingFailedFragment"
         tools:layout="@layout/fragment_dashboard" />
 </navigation>

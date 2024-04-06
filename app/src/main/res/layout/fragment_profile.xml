@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="top|center"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/profilePicture"
+        android:layout_width="150dp"
+        android:layout_height="150dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email:"/>
+
+    <EditText
+        android:id="@+id/emailText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Username:"/>
+
+    <EditText
+        android:id="@+id/usernameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14dp"
+        android:hint="e.g. SuperUser"/>
+
+    <Button
+        android:id="@+id/setUsernameButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="Set Username"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="File Upload"/>
+
+    <Button
+        android:id="@+id/browseButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="broswe..."/>
+
+    <TextView
+        android:id="@+id/noFileText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No file selected."/>
+
+    <!-- TODO: make or -->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Image URL:"/>
+
+    <EditText
+        android:id="@+id/imageUrlText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14dp"
+        android:hint="e.g. https://www.gravatar.com/avatar/526703ac2bd7cd675e872393a0744bf5"/>
+
+    <Button
+        android:id="@+id/linkImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="Link Image"/>
+
+</LinearLayout>

@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.example.juiceshop.ui.home.HomeFragment"
+        android:name="com.example.juiceshop.fragment.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.example.juiceshop.ui.dashboard.DashboardFragment"
+        android:name="com.example.juiceshop.fragment.DashboardFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard">
 
@@ -26,11 +26,20 @@
         <action
             android:id="@+id/action_dashboard_to_dashboard"
             app:destination="@id/navigation_dashboard"/>
+        <action
+            android:id="@+id/action_dashboard_to_profile"
+            app:destination="@id/navigation_profile" />
+        <action
+            android:id="@+id/action_dashboard_to_wallet"
+            app:destination="@id/navigation_wallet"/>
+        <action
+            android:id="@+id/action_dashboard_to_cards"
+            app:destination="@id/navigation_cards"/>
     </fragment>
 
     <fragment
         android:id="@+id/navigation_login"
-        android:name="com.example.juiceshop.ui.login.LoginFragment"
+        android:name="com.example.juiceshop.fragment.LoginFragment"
         android:label="@string/title_login"
         tools:layout="@layout/fragment_home">
 
@@ -44,7 +53,7 @@
 
     <fragment
         android:id="@+id/navigation_register"
-        android:name="com.example.juiceshop.ui.login.RegistrationFragment"
+        android:name="com.example.juiceshop.fragment.RegistrationFragment"
         android:label="@string/title_registration"
         tools:layout="@layout/fragment_home">
 
@@ -52,5 +61,34 @@
             android:id="@+id/action_register_to_login"
             app:destination="@id/navigation_login" />
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.example.juiceshop.fragment.ProfileFragment"
+        android:label="@string/title_profile"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_wallet"
+        android:name="com.example.juiceshop.fragment.WalletFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_wallet" />
+
+    <fragment
+        android:id="@+id/navigation_cards"
+        android:name="com.example.juiceshop.fragment.CardsFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_cards">
+
+        <action
+            android:id="@+id/action_cards_to_add_cards"
+            app:destination="@id/navigation_add_card" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_add_card"
+        android:name="com.example.juiceshop.viewmodel.AddCardFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_add_card" />
 
 </navigation>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:background="@drawable/edit_text_border"
+        android:hint="Name *"/>
+
+    <EditText
+        android:id="@+id/cardNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:background="@drawable/edit_text_border"
+        android:inputType="number"
+        android:hint="Card Number *"/>
+
+    <TextView
+        android:id="@+id/countDigits"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"/>
+
+    <EditText
+        android:id="@+id/expiryMonth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:background="@drawable/edit_text_border"
+        android:inputType="number"
+        android:hint="Expiry Month *"/>
+
+    <EditText
+        android:id="@+id/expiryYear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:background="@drawable/edit_text_border"
+        android:inputType="number"
+        android:hint="Expiry Year *"/>
+
+    <Button
+        android:id="@+id/submitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"/>
+
+</LinearLayout>
