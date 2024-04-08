@@ -2,6 +2,7 @@ package com.example.juiceshop.fragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +25,7 @@ class LoadingFragment: Fragment() {
         binding = FragmentLoadingBinding.inflate(inflater, container, false)
         val root: View = binding!!.root
         SharedPrefHelper.init(requireContext())
-        if (SharedPrefHelper.email != null && SharedPrefHelper.password != null) {
+        if (SharedPrefHelper.token == null && SharedPrefHelper.email != null && SharedPrefHelper.password != null) {
             ApiManager.logIn(
                 SharedPrefHelper.email!!, SharedPrefHelper.password!!, true,
             onSuccess = {

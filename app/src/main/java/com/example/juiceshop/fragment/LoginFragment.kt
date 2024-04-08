@@ -1,6 +1,7 @@
 package com.example.juiceshop.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
@@ -15,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.juiceshop.utils.ApiManager
 import com.example.juiceshop.R
 import com.example.juiceshop.databinding.FragmentLoginBinding
+import com.example.juiceshop.utils.PopUpManager
 
 class LoginFragment : Fragment(){
 
@@ -59,7 +62,15 @@ class LoginFragment : Fragment(){
                                 findNavController().popBackStack()
                             }
                         }, onError = {
-                            showPopUp(it)
+                            activity?.runOnUiThread {
+                                PopUpManager.showPopUp(
+                                    requireContext(),
+                                    it?: "",
+                                    "Ok"
+                                ) {
+                                    Log.d("debug", "ok")
+                                }
+                            }
                         }
                     )
                 } else {
@@ -82,10 +93,6 @@ class LoginFragment : Fragment(){
             }
         }
         return root
-    }
-
-    private fun showPopUp(text: String?) {
-        // TODO
     }
 
 }

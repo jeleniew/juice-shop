@@ -21,6 +21,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.juiceshop.utils.ApiManager
 import com.example.juiceshop.R
 import com.example.juiceshop.databinding.FragmentRegistrationBinding
+import com.example.juiceshop.utils.PopUpManager
 import com.jaredrummler.materialspinner.MaterialSpinner
 
 
@@ -142,7 +143,15 @@ class RegistrationFragment : Fragment() {
                                 findNavController().popBackStack()
                             }
                         }, onError =  {
-                            showPopUp(it)
+                            activity?.runOnUiThread {
+                                PopUpManager.showPopUp(
+                                    requireContext(),
+                                    it?: "",
+                                    "Ok"
+                                ) {
+                                    Log.d("debug", "ok")
+                                }
+                            }
                         }
                     )
                 } else {
@@ -173,8 +182,4 @@ class RegistrationFragment : Fragment() {
         return root
     }
 
-    private fun showPopUp(text: String?) {
-        Log.d("debug", "show popup: $text")
-        // TODO
-    }
 }

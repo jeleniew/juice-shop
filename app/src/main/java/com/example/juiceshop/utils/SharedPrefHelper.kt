@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 object SharedPrefHelper {
 
     private const val PREFS_NAME = "PREFS_NAME"
+    private const val KEY_REMEMBER_ME = "KEY_REMEMBER_ME"
     private const val KEY_EMAIL = "KEY_EMAIL"
     private const val KEY_PASSWORD = "KEY_PASSWORD"
     private const val TOKEN = "TOKEN"
@@ -14,6 +15,12 @@ object SharedPrefHelper {
     fun init(context: Context) {
         sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     }
+
+    var rememberMe: Boolean
+        get() = sharedPreferences.getBoolean(KEY_REMEMBER_ME, false)
+        set(value) {
+            sharedPreferences.edit().putBoolean(KEY_REMEMBER_ME, value).apply()
+        }
 
     var email: String?
         get() = sharedPreferences.getString(KEY_EMAIL, null)

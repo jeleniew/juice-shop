@@ -13,6 +13,14 @@
         android:background="@drawable/edit_text_border"
         android:hint="Name *"/>
 
+    <TextView
+        android:id="@+id/nameHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/red"
+        android:text="Please provide a name."
+        android:visibility="invisible"/>
+
     <EditText
         android:id="@+id/cardNumber"
         android:layout_width="match_parent"
@@ -25,8 +33,7 @@
     <TextView
         android:id="@+id/countDigits"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"/>
+        android:layout_height="wrap_content"/>
 
     <EditText
         android:id="@+id/expiryMonth"
@@ -37,6 +44,14 @@
         android:inputType="number"
         android:hint="Expiry Month *"/>
 
+    <TextView
+        android:id="@+id/monthHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Value must be between 1 and 12."
+        android:textColor="@color/red"
+        android:visibility="invisible"/>
+
     <EditText
         android:id="@+id/expiryYear"
         android:layout_width="match_parent"
@@ -45,6 +60,14 @@
         android:background="@drawable/edit_text_border"
         android:inputType="number"
         android:hint="Expiry Year *"/>
+
+    <TextView
+        android:id="@+id/yearHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Value must be between 2080 and 2099."
+        android:textColor="@color/red"
+        android:visibility="invisible"/>
 
     <Button
         android:id="@+id/submitButton"

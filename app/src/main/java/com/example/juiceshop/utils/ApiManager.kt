@@ -18,7 +18,37 @@ import java.io.IOException
 object ApiManager {
 
     private val URL = "https://juice-shop.herokuapp.com/"
-//        private val URL = "https://juice-shop.exemplary.pl/"
+//    private val URL = "https://juice-shop.exemplary.pl/"
+
+    fun getRequest(endpoint: String, callback: Callback, requireToken: Boolean) {
+        var url = URL + endpoint
+        var client = OkHttpClient()
+        var request = Request.Builder()
+            .url(url)
+            .apply {
+                if (requireToken) {
+                    header("Authorization", "Bearer " + SharedPrefHelper.token)
+                }
+            }
+            .get()
+            .build()
+        client.newCall(request).enqueue(callback)
+    }
+
+    fun postRequest(endpoint: String, requestBody: RequestBody, callback: Callback, requireToken: Boolean) {
+        var url = URL + endpoint
+        var client = OkHttpClient()
+        val request = Request.Builder()
+            .url(url)
+            .apply {
+                if (requireToken) {
+                    header("Authorization", "Bearer " + SharedPrefHelper.token)
+                }
+            }
+            .post(requestBody)
+            .build()
+        client.newCall(request).enqueue(callback)
+    }
     fun getAllProducts(onSuccess: (json: String?) -> Unit, onFail: (code: Int, message: String) -> Unit): List<ShopItem> {
         var shopItemList = ArrayList<ShopItem>()
 
@@ -74,33 +104,15 @@ object ApiManager {
     }
 
     private fun requestAllProducts(callback: Callback) {
-        var url = URL + "rest/products/search?"
-        var client = OkHttpClient()
-        var request = Request.Builder()
-            .url(url)
-            .get()
-            .build()
-        client.newCall(request).enqueue(callback)
+        getRequest("rest/products/search?", callback, false)
     }
 
     private fun requestProducts(name: String, callback: Callback) {
-        var url = URL + "rest/products/search?q=" + name
-        var client = OkHttpClient()
-        var request = Request.Builder()
-            .url(url)
-            .get()
-            .build()
-        client.newCall(request).enqueue(callback)
+        getRequest("rest/products/search?q=$name", callback, false)
     }
 
     fun requestProductPicture(name: String, callback: (image: Bitmap?) -> Unit) {
-        var url = URL + "assets/public/images/products/" + name
-        var client = OkHttpClient()
-        var request = Request.Builder()
-            .url(url)
-            .get()
-            .build()
-        client.newCall(request).enqueue(object: Callback {
+        var callback1 = object: Callback {
             override fun onFailure(call: Call, e: IOException) {
                 callback(null)
             }
@@ -115,32 +127,31 @@ object ApiManager {
                     callback(null)
                 }
             }
-        })
+        }
+        getRequest("assets/public/images/products/$name", callback1, false)
     }
 
     fun requestPicture(name: String, callback: (image: Bitmap?) -> Unit) {
-        var url = URL + name
-        var client = OkHttpClient()
-        var request = Request.Builder()
-            .url(url)
-            .get()
-            .build()
-        client.newCall(request).enqueue(object: Callback {
+        var callback1 = object: Callback {
             override fun onFailure(call: Call, e: IOException) {
                 callback(null)
             }
 
             override fun onResponse(call: Call, response: Response) {
+                // TODO: svg images do not work
                 var inputStream = response.body?.byteStream()
                 var responseCode = response.code
                 if (responseCode == 200) {
+                    Log.d("debug", "resonseCode 200")
                     val bitmap = BitmapFactory.decodeStream(inputStream)
                     callback(bitmap)
                 } else {
+                    Log.d("debug", "resonseCode $responseCode")
                     callback(null)
                 }
             }
-        })
+        }
+        getRequest("$name", callback1, false)
     }
 
     fun logIn(email: String,
@@ -161,6 +172,8 @@ object ApiManager {
                     // TODO: in case of non-existing keys we need to deal with exception
                     var token = JSONObject(json).getJSONObject("authentication").getString("token")
                     SharedPrefHelper.token = token  // TODO if not checked then we should log out
+
+                    SharedPrefHelper.rememberMe = checked
                     if (checked) {
                         SharedPrefHelper.email = email
                         SharedPrefHelper.password = password
@@ -174,19 +187,11 @@ object ApiManager {
     }
 
     private fun requestLogIn(email: String, password: String, callback: Callback) {
-        var url = URL + "rest/user/login"
-        var client = OkHttpClient()
-
         var requestBody = FormBody.Builder()
             .add("email", email)
             .add("password", password)
             .build()
-
-        var request = Request.Builder()
-            .url(url)
-            .post(requestBody)
-            .build()
-        client.newCall(request).enqueue(callback)
+        postRequest("rest/user/login", requestBody, callback, false)
     }
 
     fun createSecurityQuestionJson(id: Int, question: String, date: String): String {
@@ -199,9 +204,6 @@ object ApiManager {
     }
 
     fun register(email: String, password: String, passwordRepeat: String, securityQuestionJson: String, securityAnswer: String, onSuccess: () -> Unit, onError: (String?) -> Unit) {
-        var url = URL + "api/Users/"
-        var client = OkHttpClient()
-
         var requestBody = FormBody.Builder()
             .add("email", email)
             .add("password", password)
@@ -210,11 +212,7 @@ object ApiManager {
             .add("securityAnswer", securityAnswer)
             .build()
 
-        var request = Request.Builder()
-            .url(url)
-            .post(requestBody)
-            .build()
-        client.newCall(request).enqueue(object: Callback {
+        var callback1 = object: Callback {
             override fun onFailure(call: Call, e: IOException) {
                 onError(e.toString())
             }
@@ -230,21 +228,17 @@ object ApiManager {
                         onError(status)
                     }
                 } else {
-                    onError(response.message)
+                    var errors = JSONObject(json).getJSONArray("errors")
+                    var message = errors.getJSONObject(0).getString("message")
+                    onError(message)
                 }
             }
-        })
+        }
+        postRequest("api/Users/", requestBody, callback1, false)
     }
 
     fun getSecurityQuestions(callback: (questionList: List<String>?) -> Unit) {
-        var url = URL + "api/SecurityQuestions"
-        var client = OkHttpClient()
-
-        var request = Request.Builder()
-            .url(url)
-            .get()
-            .build()
-        client.newCall(request).enqueue(object: Callback {
+        var callback1 = object: Callback {
             override fun onFailure(call: Call, e: IOException) {
                 callback(null)
             }
@@ -266,20 +260,11 @@ object ApiManager {
                     callback(null)
                 }
             }
-        })
+        }
+        getRequest("api/SecurityQuestions", callback1, false)
     }
     fun requestBalance(callback: (balance: Double) -> Unit) {
-        val url = URL + "rest/wallet/balance"
-        val client = OkHttpClient()
-
-        val request = Request.Builder()
-            .url(url)
-            .header("Authorization", "Bearer " + SharedPrefHelper.token)
-//            .header("Cookie", getTokenJson())
-            .get()
-            .build()
-
-        client.newCall(request).enqueue(object : Callback {
+        var callback1 = object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.d("debug", "wallet: failed")
                 callback(0.0)
@@ -297,7 +282,8 @@ object ApiManager {
                     callback(0.0)
                 }
             }
-        })
+        }
+        getRequest("rest/wallet/balance", callback1, true)
     }
 
     private fun getTokenJson(): String {
@@ -334,17 +320,8 @@ object ApiManager {
         })
     }
 
-    fun requestCards(callback: (json: String?) -> Unit) {
-        var url = URL + "api/Cards"
-        var client = OkHttpClient()
-
-        var request = Request.Builder()
-            .url(url)
-            .header("Authorization", "Bearer " + SharedPrefHelper.token)
-            .get()
-            .build()
-
-        client.newCall(request).enqueue(object: Callback {
+    fun requestCards(callback: (json: String?, success: Boolean) -> Unit) {
+        var callback1 = object: Callback {
             override fun onFailure(call: Call, e: IOException) {
                 TODO("Not yet implemented")
             }
@@ -355,37 +332,17 @@ object ApiManager {
                 if (responseCode == 200) {
                     var obj = JSONObject(json)
                     var data = obj.getString("data")
-                    callback(data)
+                    callback(data, true)
                 } else {
-                    callback(null)
+                    callback(json, false)
                 }
             }
-        })
+        }
+        getRequest("api/Cards", callback1, true)
     }
 
-    fun addCard(cardJson: RequestBody) {
-        var url = URL + "api/Cards/"
-        var client = OkHttpClient()
-
-        var request = Request.Builder()
-            .url(url)
-            .addHeader("Authorization", "Bearer " + SharedPrefHelper.token)
-            .post(cardJson)
-            .build()
-        client.newCall(request).enqueue(object: Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                Log.d("debug", "cards: failed")
-                TODO("Not yet implemented")
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                var json = response.body?.string()
-                var responseCode = response.code
-                if (responseCode == 200) {
-                } else {
-                }
-            }
-        })
+    fun addCard(cardJson: RequestBody, callback: Callback) {
+        postRequest("api/Cards/", cardJson, callback, true)
     }
 
     fun createCardJson(fullName: String, cardNum: Long, expMonth: String, expYear: String): RequestBody {

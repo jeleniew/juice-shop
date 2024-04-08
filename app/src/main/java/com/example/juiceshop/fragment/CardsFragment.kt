@@ -1,6 +1,7 @@
 package com.example.juiceshop.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,20 +41,22 @@ class CardsFragment : Fragment() {
             findNavController().navigate(R.id.action_cards_to_add_cards)
         }
 
-        ApiManager.requestCards {
-            var cardArrayJson = JSONArray(it)
-            var cardList= mutableListOf<CreditCard>()
-            for (i in 0 until cardArrayJson.length()) {
-                val cardJson = cardArrayJson.getJSONObject(i)
-                val fullName = cardJson.getString("fullName")
-                val cardNum = cardJson.getString("cardNum")
-                val expMonth = cardJson.getString("expMonth")
-                val expYear = cardJson.getString("expYear")
+        ApiManager.requestCards { json, success ->
+            if (success) {
+                var cardArrayJson = JSONArray(json)
+                var cardList = mutableListOf<CreditCard>()
+                for (i in 0 until cardArrayJson.length()) {
+                    val cardJson = cardArrayJson.getJSONObject(i)
+                    val fullName = cardJson.getString("fullName")
+                    val cardNum = cardJson.getString("cardNum")
+                    val expMonth = cardJson.getString("expMonth")
+                    val expYear = cardJson.getString("expYear")
 
-                val card = CreditCard(fullName, cardNum, expMonth, expYear)
-                cardList.add(card)
+                    val card = CreditCard(fullName, cardNum, expMonth, expYear)
+                    cardList.add(card)
+                }
+                showCards(cardList)
             }
-            showCards(cardList)
         }
 
         return root

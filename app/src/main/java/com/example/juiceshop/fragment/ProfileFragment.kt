@@ -46,8 +46,10 @@ class ProfileFragment : Fragment() {
 
         Thread {
             ApiManager.requestProfileData(callback = { email, profileImage ->
+                Log.d("debug", "image: $profileImage")
                 ApiManager.requestPicture(profileImage, callback = {
                     activity?.runOnUiThread {
+                        Log.d("debug", "image: ${it?: "is null"}")
                         profilePicture.setImageBitmap(it)
                         emailEditText.setText(email)
                         emailEditText.keyListener = null

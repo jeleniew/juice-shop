@@ -87,7 +87,7 @@
 
     <fragment
         android:id="@+id/navigation_add_card"
-        android:name="com.example.juiceshop.viewmodel.AddCardFragment"
+        android:name="com.example.juiceshop.fragment.AddCardFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_add_card" />
 
