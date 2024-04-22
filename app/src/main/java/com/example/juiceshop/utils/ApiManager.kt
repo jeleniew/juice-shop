@@ -56,6 +56,7 @@ object ApiManager {
 
             override fun onFailure(call: Call, e: IOException) {
                 Log.d("debug", "Exception: $e")
+                onFail(408, e.message?:"")
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -132,6 +133,7 @@ object ApiManager {
     }
 
     fun requestPicture(name: String, callback: (image: Bitmap?) -> Unit) {
+        // TODO: svg does not work
         var callback1 = object: Callback {
             override fun onFailure(call: Call, e: IOException) {
                 callback(null)
@@ -220,7 +222,7 @@ object ApiManager {
             override fun onResponse(call: Call, response: Response) {
                 val json = response.body?.string()
                 val responseCode = response.code
-                if (responseCode == 200) {
+                if (responseCode == 201) {
                     var status = JSONObject(json).getString("status")
                     if (status == "success") {
                         logIn(email, password, false, onSuccess, onError)
@@ -311,6 +313,7 @@ object ApiManager {
 
             override fun onResponse(call: Call, response: Response) {
                 var json = response.body?.string()
+                Log.d("debug", "profileData: $json")
                 // TODO: check code
                 var user = JSONObject(json).getJSONObject("user")
                 val email = if (user.has("email")) user.getString("email") else ""
@@ -353,5 +356,32 @@ object ApiManager {
         jsonObject.put("expYear", expYear)
         val jsonMediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
         return RequestBody.create(jsonMediaType, jsonObject.toString())
+    }
+
+    fun setUserName(username: String, callback: Callback) {
+        val requestBody = FormBody.Builder()
+            .add("username", username)
+            .build()
+        var url = URL + "profile"
+        var client = OkHttpClient()
+
+        var request = Request.Builder()
+            .url(url)
+            .header("Cookie", getTokenJson())
+            .post(requestBody)
+            .build()
+
+        client.newCall(request).enqueue(callback)
+    }
+
+    fun requestReviews(shopItemId: Int, callback: Callback) {
+        getRequest("rest/products/${shopItemId}/reviews", callback, false)
+    }
+
+    fun sendLikeClicked(shopItemId: String, callback: Callback) {
+        val requestBody = FormBody.Builder()
+            .add("id", shopItemId)
+            .build()
+        postRequest("rest/products/reviews", requestBody, callback, true)
     }
 }

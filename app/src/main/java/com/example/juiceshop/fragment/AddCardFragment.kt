@@ -119,7 +119,6 @@ class AddCardFragment : Fragment() {
                     override fun onResponse(call: Call, response: Response) {
                         var json = response.body?.string()
                         var responseCode = response.code
-                        Log.d("debug", "responseCode: $responseCode" )
                         if (responseCode == 201) {
                             activity?.runOnUiThread { findNavController().popBackStack() }
                         } else {

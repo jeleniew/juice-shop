@@ -1,23 +1,32 @@
 package com.example.juiceshop.fragment
 
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.juiceshop.R
+import com.example.juiceshop.activity.MainActivity
 import com.example.juiceshop.databinding.FragmentProfileBinding
 import com.example.juiceshop.utils.ApiManager
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.Response
+import java.io.IOException
 
 class ProfileFragment : Fragment() {
 
@@ -57,24 +66,39 @@ class ProfileFragment : Fragment() {
                 })
             })
         }.start()
-        browseButton.setOnClickListener {
-//            getContent.launch("image/*")
 
+        setUsernameButton.setOnClickListener {
+            var username = usernameEditText.text.toString()
+            Log.d("debug", "username: $username")
+            ApiManager.setUserName(
+                username,
+                object: Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun onResponse(call: Call, response: Response) {
+                        var json = response.body?.string()
+                        if (!response.isSuccessful) {
+                            Log.d("debug", "responseCode for username: ${response.code}")
+//                            TODO("Not yet implemented")
+                        }
+                        (requireActivity() as MainActivity).hideKeyboard()
+                        activity?.runOnUiThread {
+                            (requireActivity() as MainActivity).clearFocusFromAllViews(usernameEditText)
+                        }
+                    }
+
+                })
+        }
+
+        browseButton.setOnClickListener {
             val intent = Intent()
             intent.type = "image/*"
             intent.action = Intent.ACTION_GET_CONTENT
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST)
         }
         return root
-    }
-
-//    private val viewModel: ProfileViewModel by viewModels()
-
-    private val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        uri?.let {
-            // Handle the selected image URI
-            // Do something with the selected image URI
-        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -86,37 +110,5 @@ class ProfileFragment : Fragment() {
             // Do something with the selected image URI
         }
     }
-//import androidx.lifecycle.LiveData
-//import androidx.lifecycle.MutableLiveData
-//import androidx.lifecycle.ViewModel
-//
-//class ProfileViewModel : ViewModel() {
-//
-//    // Zmienna przechowująca adres e-mail użytkownika
-//    private val _email = MutableLiveData<String>()
-//    val email: LiveData<String>
-//        get() = _email
-//
-//    // Zmienna przechowująca obraz profilowy użytkownika
-//    private val _profilePictureUri = MutableLiveData<String>()
-//    val profilePictureUri: LiveData<String>
-//        get() = _profilePictureUri
-//
-//    init {
-//        // Domyślne ustawienia początkowe dla adresu e-mail i obrazu profilowego
-//        _email.value = ""
-//        _profilePictureUri.value = ""
-//    }
-//
-//    // Metoda do ustawiania adresu e-mail
-//    fun setEmail(email: String) {
-//        _email.value = email
-//    }
-//
-//    // Metoda do ustawiania obrazu profilowego
-//    fun setProfilePictureUri(uri: String) {
-//        _profilePictureUri.value = uri
-//    }
-//}
 
 }

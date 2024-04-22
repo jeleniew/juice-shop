@@ -11,6 +11,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.juiceshop.utils.ApiManager
@@ -72,7 +73,8 @@ class HomeFragment : Fragment() {
         })
 
         searchView.setOnCloseListener {
-            progressBar.visibility = View.VISIBLE;
+            progressBar.visibility = View.VISIBLE
+            // TODO: why getProducts?
             ApiManager.getProducts(
                 searchView.query.toString(),
                 onFail = { _: Int, _: String ->
@@ -97,7 +99,7 @@ class HomeFragment : Fragment() {
         if (json == null) {
             activity?.runOnUiThread {
                 progressBar.visibility = View.INVISIBLE
-                adapter = ShopItemAdapter(requireContext(), emptyList())
+                adapter = ShopItemAdapter(requireContext(), emptyList(), findNavController())
                 recyclerView.adapter = adapter
             }
             return
@@ -120,7 +122,7 @@ class HomeFragment : Fragment() {
                                 var sortedList = itemList.sortedBy { it.name }
                                 activity?.runOnUiThread {
                                     progressBar.visibility = View.INVISIBLE
-                                    adapter = ShopItemAdapter(requireContext(), sortedList)
+                                    adapter = ShopItemAdapter(requireContext(), sortedList, findNavController())
                                     recyclerView.adapter = adapter
                                 }
                             }
