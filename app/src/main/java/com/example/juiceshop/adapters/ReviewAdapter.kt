@@ -1,5 +1,6 @@
 package com.example.juiceshop.adapters
 
+import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,6 +20,7 @@ import org.json.JSONObject
 import java.io.IOException
 
 class ReviewAdapter(
+    private val activity: Activity,
     private val context: Context,
     private var itemList: List<Review>
 ) : RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder>() {
@@ -47,12 +49,14 @@ class ReviewAdapter(
             authorTextView.text = item.author
             reviewTextView.text = item.message
             countLikesTextView.text = item.likesCount.toString()
-            if (item.likedBy.find { it == SharedPrefHelper.email } != null) {
+            var isLiked = (item.likedBy.find { it == SharedPrefHelper.email } != null)
+            if (isLiked) {
                 likeButton.setImageResource(android.R.drawable.btn_star_big_on)
             }
             // TODO: only when logged we should setOnCLick
-            likeButton.setOnClickListener {
-                ApiManager.sendLikeClicked(item.id, object: Callback {
+            if (SharedPrefHelper.token != null && !isLiked) {
+                likeButton.setOnClickListener {
+                    ApiManager.sendLikeClicked(item.id, object: Callback {
                     override fun onFailure(call: Call, e: IOException) {
                         Log.d("debug", "sendLikeClicked: $e")
 //                        TODO("Not yet implemented")
@@ -63,7 +67,7 @@ class ReviewAdapter(
 
                         Log.d("debug", "clicked: $jsonString && ${response.code}")
                         if (response.isSuccessful && jsonString != null) {
-                            val jsonObject = JSONObject()
+                            val jsonObject = JSONObject(jsonString)
                             val updatedArray = jsonObject.getJSONArray("updated")
                             val updatedObject = updatedArray.getJSONObject(0)
                             val likesCount = updatedObject.getString("likesCount")
@@ -76,15 +80,18 @@ class ReviewAdapter(
                                     break
                                 }
                             }
-                            if (isLikedByUser) {
-                                likeButton.setImageResource(android.R.drawable.btn_star_big_on)
-                            } else {
-                                likeButton.setImageResource(android.R.drawable.btn_star_big_off)
+                            activity?.runOnUiThread {
+                                if (isLikedByUser) {
+                                    likeButton.setImageResource(android.R.drawable.btn_star_big_on)
+                                } else {
+                                    likeButton.setImageResource(android.R.drawable.btn_star_big_off)
+                                }
+                                countLikesTextView.text = likesCount
                             }
-                            countLikesTextView.text = likesCount
                         }
                     }
                 })
+                }
             }
         }
     }

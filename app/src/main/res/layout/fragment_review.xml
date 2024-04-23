@@ -50,7 +50,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <TextView
@@ -69,6 +69,22 @@
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
+            <EditText
+                android:id="@+id/addComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:padding="10dp"
+                android:background="@drawable/edit_text_border"
+                android:inputType="text"
+                android:hint="What did you like or disliked?"/>
+
+            <Button
+                android:id="@+id/submit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="submit"/>
 
         </LinearLayout>
 

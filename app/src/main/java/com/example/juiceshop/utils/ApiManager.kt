@@ -176,10 +176,10 @@ object ApiManager {
                     SharedPrefHelper.token = token  // TODO if not checked then we should log out
 
                     SharedPrefHelper.rememberMe = checked
-                    if (checked) {
-                        SharedPrefHelper.email = email
-                        SharedPrefHelper.password = password
-                    }
+//                    if (checked) {
+                    SharedPrefHelper.email = email
+                    SharedPrefHelper.password = password
+//                    }
                     onSuccess()
                 } else {
                     onError(json)
@@ -382,6 +382,32 @@ object ApiManager {
         val requestBody = FormBody.Builder()
             .add("id", shopItemId)
             .build()
+Log.d("debug", "shopItemId: $shopItemId")
+//        var url = URL + "rest/products/reviews"
+//        var client = OkHttpClient()
+//
+//        var request = Request.Builder()
+//            .url(url)
+//            .header("Cookie", getTokenJson())
+//            .post(requestBody)
+//            .build()
+//
+//        client.newCall(request).enqueue(callback)
         postRequest("rest/products/reviews", requestBody, callback, true)
+    }
+
+    fun puComment(shopItemId: String, message: String, email: String, callback: Callback) {
+        var url = URL + "rest/products/${shopItemId}/reviews"
+        var client = OkHttpClient()
+        val requestBody = FormBody.Builder()
+            .add("message", message)
+            .add("author", email)
+            .build()
+        val request = Request.Builder()
+            .url(url)
+            .header("Authorization", "Bearer " + SharedPrefHelper.token)
+            .put(requestBody)
+            .build()
+        client.newCall(request).enqueue(callback)
     }
 }

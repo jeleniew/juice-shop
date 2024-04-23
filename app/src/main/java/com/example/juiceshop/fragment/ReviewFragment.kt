@@ -6,6 +6,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -19,6 +22,7 @@ import com.example.juiceshop.databinding.FragmentReviewBinding
 import com.example.juiceshop.model.Review
 import com.example.juiceshop.utils.ApiManager
 import com.example.juiceshop.utils.Constants
+import com.example.juiceshop.utils.SharedPrefHelper
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
@@ -34,6 +38,8 @@ class ReviewFragment : Fragment() {
     private lateinit var price: TextView
     private lateinit var reviewsTextView: TextView
     private lateinit var recyclerView: RecyclerView
+    private lateinit var commentEditText: EditText
+    private lateinit var submitButton: Button
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,6 +56,8 @@ class ReviewFragment : Fragment() {
         reviewsTextView = root.findViewById(R.id.reviews)
         recyclerView = root.findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
+        commentEditText = root.findViewById(R.id.addComment)
+        submitButton = root.findViewById(R.id.submit)
 
         val productId = requireArguments().getInt(Constants.PRODUCT_ID)
         val productName = requireArguments().getString(Constants.PRODUCT_NAME)
@@ -60,6 +68,38 @@ class ReviewFragment : Fragment() {
         this.itemName.text = productName
         this.price.text = price + "¤"
 
+        loadReviews(productId)
+
+        submitButton.setOnClickListener {
+            var message = commentEditText.text
+            if (message != null) {
+                var email = SharedPrefHelper.email
+                email?.let {
+                    ApiManager.puComment(
+                        productId.toString(),
+                        message.toString(),
+                        email,
+                        object : Callback {
+                            override fun onFailure(call: Call, e: IOException) {
+                                TODO("Not yet implemented")
+                            }
+
+                            override fun onResponse(call: Call, response: Response) {
+                                Log.d("debug", "response submit: ${response.message}")
+                                if (response.isSuccessful) {
+                                    loadReviews(productId)
+                                }
+                            }
+
+                        })
+                }
+            }
+        }
+
+        return root
+    }
+
+    fun loadReviews(productId: Int) {
         ApiManager.requestReviews(productId, object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.e("ShopItemAdapter", "Failed to fetch reviews for $productId", e)
@@ -100,12 +140,10 @@ class ReviewFragment : Fragment() {
                 }
             }
         })
-
-        return root
     }
 
     fun showReviews(reviewList: List<Review>) {
-        var adapter = ReviewAdapter(requireContext(), reviewList)
+        var adapter = ReviewAdapter(requireActivity(), requireContext(), reviewList)
         recyclerView.adapter = adapter
     }
 
