@@ -91,10 +91,11 @@ object ApiManager {
                 var statusCode = response.code
                 var responseMessage = response.message
 
-                var data = JSONObject(responseBody).get("data").toString()
-
                 when (statusCode) {
-                    200 -> { onSuccess(data) }
+                    200 -> {
+                        var data = JSONObject(responseBody).get("data").toString()
+                        onSuccess(data)
+                    }
                     else -> onFail(statusCode, responseMessage)
                 }
             }

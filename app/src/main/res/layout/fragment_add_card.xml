@@ -28,6 +28,7 @@
         android:padding="10dp"
         android:background="@drawable/edit_text_border"
         android:inputType="number"
+        android:maxLength="16"
         android:hint="Card Number *"/>
 
     <TextView
@@ -42,6 +43,7 @@
         android:padding="10dp"
         android:background="@drawable/edit_text_border"
         android:inputType="number"
+        android:maxLength="2"
         android:hint="Expiry Month *"/>
 
     <TextView
@@ -59,6 +61,7 @@
         android:padding="10dp"
         android:background="@drawable/edit_text_border"
         android:inputType="number"
+        android:maxLength="2"
         android:hint="Expiry Year *"/>
 
     <TextView

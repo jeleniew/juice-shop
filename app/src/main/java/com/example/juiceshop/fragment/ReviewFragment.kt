@@ -2,10 +2,13 @@ package com.example.juiceshop.fragment
 
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
@@ -39,6 +42,7 @@ class ReviewFragment : Fragment() {
     private lateinit var reviewsTextView: TextView
     private lateinit var recyclerView: RecyclerView
     private lateinit var commentEditText: EditText
+    private lateinit var countChar: TextView
     private lateinit var submitButton: Button
 
     override fun onCreateView(
@@ -57,6 +61,7 @@ class ReviewFragment : Fragment() {
         recyclerView = root.findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
         commentEditText = root.findViewById(R.id.addComment)
+        countChar = root.findViewById(R.id.countChar)
         submitButton = root.findViewById(R.id.submit)
 
         val productId = requireArguments().getInt(Constants.PRODUCT_ID)
@@ -70,7 +75,33 @@ class ReviewFragment : Fragment() {
 
         loadReviews(productId)
 
+        reviewsTextView.setOnClickListener {
+            if (recyclerView.visibility == View.VISIBLE) {
+                recyclerView.visibility = View.GONE
+            } else {
+                recyclerView.visibility = View.VISIBLE
+            }
+        }
+
+        commentEditText.addTextChangedListener (
+            object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+                    countChar.text = "${s?.length.toString()}/160"
+                }
+
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {}
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            }
+        )
+
         submitButton.setOnClickListener {
+            submitButton.isEnabled = false
             var message = commentEditText.text
             if (message != null) {
                 var email = SharedPrefHelper.email
@@ -81,14 +112,17 @@ class ReviewFragment : Fragment() {
                         email,
                         object : Callback {
                             override fun onFailure(call: Call, e: IOException) {
+                                submitButton.isEnabled = true
                                 TODO("Not yet implemented")
                             }
 
                             override fun onResponse(call: Call, response: Response) {
                                 Log.d("debug", "response submit: ${response.message}")
                                 if (response.isSuccessful) {
+                                    commentEditText.text.clear()
                                     loadReviews(productId)
                                 }
+                                submitButton.isEnabled = true
                             }
 
                         })
