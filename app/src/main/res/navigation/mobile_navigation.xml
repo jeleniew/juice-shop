@@ -37,6 +37,9 @@
             android:id="@+id/action_dashboard_to_dashboard"
             app:destination="@id/navigation_dashboard"/>
         <action
+            android:id="@+id/action_dashboard_to_basket"
+            app:destination="@id/navigation_basket" />
+        <action
             android:id="@+id/action_dashboard_to_profile"
             app:destination="@id/navigation_profile" />
         <action
@@ -71,6 +74,12 @@
             android:id="@+id/action_register_to_login"
             app:destination="@id/navigation_login" />
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_basket"
+        android:name="com.example.juiceshop.fragment.BasketFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_basket" />
 
     <fragment
         android:id="@+id/navigation_profile"

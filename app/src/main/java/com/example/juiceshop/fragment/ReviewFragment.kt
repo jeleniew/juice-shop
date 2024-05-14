@@ -14,6 +14,7 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -75,14 +76,6 @@ class ReviewFragment : Fragment() {
 
         loadReviews(productId)
 
-        reviewsTextView.setOnClickListener {
-            if (recyclerView.visibility == View.VISIBLE) {
-                recyclerView.visibility = View.GONE
-            } else {
-                recyclerView.visibility = View.VISIBLE
-            }
-        }
-
         commentEditText.addTextChangedListener (
             object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {
@@ -112,17 +105,22 @@ class ReviewFragment : Fragment() {
                         email,
                         object : Callback {
                             override fun onFailure(call: Call, e: IOException) {
-                                submitButton.isEnabled = true
-                                TODO("Not yet implemented")
+                                requireActivity().runOnUiThread {
+                                    submitButton.isEnabled = true
+                                }
+                                Toast.makeText(requireContext(), "failed to add comment", Toast.LENGTH_LONG)
+//                                TODO("Not yet implemented")
                             }
 
                             override fun onResponse(call: Call, response: Response) {
                                 Log.d("debug", "response submit: ${response.message}")
                                 if (response.isSuccessful) {
-                                    commentEditText.text.clear()
+                                    requireActivity().runOnUiThread {
+                                        commentEditText.text.clear()
+                                        submitButton.isEnabled = true
+                                    }
                                     loadReviews(productId)
                                 }
-                                submitButton.isEnabled = true
                             }
 
                         })
@@ -165,7 +163,7 @@ class ReviewFragment : Fragment() {
                         ))
                     }
 
-                    requireActivity().runOnUiThread {
+                    activity?.runOnUiThread {
                         showReviews(reviewList)
                     }
 

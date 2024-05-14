@@ -7,6 +7,7 @@ import com.example.juiceshop.model.ShopItem
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.FormBody
+import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -18,6 +19,8 @@ import java.io.IOException
 object ApiManager {
 
     private val URL = "https://juice-shop.herokuapp.com/"
+
+//    private val URL = "https://192.168.0.108:3000/"
 //    private val URL = "https://juice-shop.exemplary.pl/"
 
     fun getRequest(endpoint: String, callback: Callback, requireToken: Boolean) {
@@ -49,6 +52,37 @@ object ApiManager {
             .build()
         client.newCall(request).enqueue(callback)
     }
+
+    private fun putRequest(endpoint: String, requestBody: RequestBody, callback: Callback, requireToken: Boolean) {
+        var url = URL + endpoint
+        var client = OkHttpClient()
+        val request = Request.Builder()
+            .url(url)
+            .apply {
+                if (requireToken) {
+                    header("Authorization", "Bearer " + SharedPrefHelper.token)
+                }
+            }
+            .put(requestBody)
+            .build()
+        client.newCall(request).enqueue(callback)
+    }
+
+    private fun deleteRequest(endpoint: String, callback: Callback, requireToken: Boolean) {
+        var url = URL + endpoint
+        var client = OkHttpClient()
+        val request = Request.Builder()
+            .url(url)
+            .apply {
+                if (requireToken) {
+                    header("Authorization", "Bearer " + SharedPrefHelper.token)
+                }
+            }
+            .delete()
+            .build()
+        client.newCall(request).enqueue(callback)
+    }
+
     fun getAllProducts(onSuccess: (json: String?) -> Unit, onFail: (code: Int, message: String) -> Unit): List<ShopItem> {
         var shopItemList = ArrayList<ShopItem>()
 
@@ -173,13 +207,15 @@ object ApiManager {
                 var responseCode = response.code
                 if(responseCode == 200) {
                     // TODO: in case of non-existing keys we need to deal with exception
-                    var token = JSONObject(json).getJSONObject("authentication").getString("token")
+                    var authentication = JSONObject(json).getJSONObject("authentication")
+                    var token = authentication.getString("token")
                     SharedPrefHelper.token = token  // TODO if not checked then we should log out
 
                     SharedPrefHelper.rememberMe = checked
 //                    if (checked) {
                     SharedPrefHelper.email = email
                     SharedPrefHelper.password = password
+                    SharedPrefHelper.bid = authentication.getInt("bid")
 //                    }
                     onSuccess()
                 } else {
@@ -226,7 +262,7 @@ object ApiManager {
                 if (responseCode == 201) {
                     var status = JSONObject(json).getString("status")
                     if (status == "success") {
-                        logIn(email, password, false, onSuccess, onError)
+                        logIn(email, password, true, onSuccess, onError)
                     } else {
                         onError(status)
                     }
@@ -398,17 +434,60 @@ Log.d("debug", "shopItemId: $shopItemId")
     }
 
     fun puComment(shopItemId: String, message: String, email: String, callback: Callback) {
-        var url = URL + "rest/products/${shopItemId}/reviews"
-        var client = OkHttpClient()
         val requestBody = FormBody.Builder()
             .add("message", message)
             .add("author", email)
             .build()
-        val request = Request.Builder()
-            .url(url)
-            .header("Authorization", "Bearer " + SharedPrefHelper.token)
-            .put(requestBody)
-            .build()
-        client.newCall(request).enqueue(callback)
+        putRequest("rest/products/${shopItemId}/reviews", requestBody, callback, true)
     }
+
+    fun getBasket(callback: Callback) {
+        Log.d("debug", "${SharedPrefHelper.bid}")
+        getRequest("rest/basket/${SharedPrefHelper.bid}", callback, true)
+    }
+
+    fun addBasketItemId(id: Int, callback: Callback) {
+        getRequest("api/BasketItems/$id", callback, true)
+    }
+
+    fun addBasketItem(id: Int, callback: Callback) {
+        val (dayOfWeek, dayOfMonth, month) = CommonUtils.getCurrentDateVariables()
+        getRequest("api/Products/$id?d=$dayOfWeek%$dayOfMonth$month%2013%202024", callback, true)
+    }
+
+    fun getItemQuantity(id: Int, callback: Callback) {
+//        val requestBody = FormBody.Builder()
+//            .add("ProductId", id.toString())
+//            .add("BasketId", "${SharedPrefHelper.bid}")
+//            .add("quantity", ""+1)
+//            .build()
+//        val requestBody = FormBody.Builder()
+//            .add("ProductId", 6.toString())
+//            .add("BasketId", 1.toString())
+//            .add("quantity", 1.toString())
+//            .build()
+        val jsonObject = JSONObject().apply {
+            put("ProductId", id)
+            put("BasketId", SharedPrefHelper.bid)
+            put("quantity", 1)
+        }
+        val requestBody = jsonObject.toString()
+        val requestBody2 = RequestBody.create("application/json".toMediaTypeOrNull(), jsonObject.toString())
+        postRequest("api/BasketItems/", requestBody2, callback, true)
+    }
+
+    fun changeBasketItemQuantity(id: Int, quantity: Int, callback: Callback) {
+        val requestBody = FormBody.Builder()
+            .add("quantity", quantity.toString())
+            .build()
+        putRequest("api/basketItems/$id", requestBody, callback, true)
+    }
+
+    fun deleteBasketItem(id: Int, callback: Callback) {
+        deleteRequest("api/basketItems/$id", callback, true)
+    }
+
+    fun getOrderHistory() {}
+
+
 }

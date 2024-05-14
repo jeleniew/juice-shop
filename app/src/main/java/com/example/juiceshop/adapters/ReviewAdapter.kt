@@ -65,7 +65,7 @@ class ReviewAdapter(
                     override fun onResponse(call: Call, response: Response) {
                         var jsonString = response.body?.string()
 
-                        Log.d("debug", "clicked: $jsonString && ${response.code}")
+                        Log.d("debug", "clicked: ${response.code}")
                         if (response.isSuccessful && jsonString != null) {
                             val jsonObject = JSONObject(jsonString)
                             val updatedArray = jsonObject.getJSONArray("updated")

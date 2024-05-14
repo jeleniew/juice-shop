@@ -38,12 +38,16 @@ class DashboardFragment : Fragment() {
 
         if (SharedPrefHelper.token != null) {
             optionList = listOf(
+                Option("Basket"),
                 Option("Profile"),
                 Option("Digital wallet"),
                 Option("My Payment Options"),
                 Option("Log out")
             )
             onCLickList = listOf(
+                View.OnClickListener { _ ->
+                    findNavController().navigate(R.id.action_dashboard_to_basket)
+                },
                 View.OnClickListener { _ ->
                     findNavController().navigate(R.id.action_dashboard_to_profile)
                 },

@@ -10,4 +10,5 @@
     </item>
     <item android:top="10dp" android:bottom="10dp" android:right="21dp" android:left="21dp">
         <shape android:shape="rectangle" android:tint="@color/white"/>
-    </item></layer-list>
+    </item>
+</layer-list>

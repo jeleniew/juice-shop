@@ -10,6 +10,7 @@ object SharedPrefHelper {
     private const val KEY_EMAIL = "KEY_EMAIL"
     private const val KEY_PASSWORD = "KEY_PASSWORD"
     private const val TOKEN = "TOKEN"
+    private const val BASKET_ID = "BASKET_ID"
 
     private lateinit var sharedPreferences: SharedPreferences
     fun init(context: Context) {
@@ -39,4 +40,15 @@ object SharedPrefHelper {
         set(value) {
             sharedPreferences.edit().putString(TOKEN, value).apply()
         }
+
+    var bid: Int?
+        get() = sharedPreferences.getInt(BASKET_ID, -1).takeIf { it != -1 }
+        set(value) {
+            if (value != null && value != -1) {
+                sharedPreferences.edit().putInt(BASKET_ID, value).apply()
+            } else {
+                sharedPreferences.edit().remove(BASKET_ID).apply()
+            }
+        }
+
 }

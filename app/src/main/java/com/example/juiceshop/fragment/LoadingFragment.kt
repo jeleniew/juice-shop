@@ -25,7 +25,8 @@ class LoadingFragment: Fragment() {
         binding = FragmentLoadingBinding.inflate(inflater, container, false)
         val root: View = binding!!.root
         SharedPrefHelper.init(requireContext())
-        if (SharedPrefHelper.token == null && SharedPrefHelper.email != null && SharedPrefHelper.password != null) {
+        if (/*SharedPrefHelper.token == null && */SharedPrefHelper.email != null && SharedPrefHelper.password != null) {
+            // TODO remember me
             ApiManager.logIn(
                 SharedPrefHelper.email!!, SharedPrefHelper.password!!, true,
             onSuccess = {

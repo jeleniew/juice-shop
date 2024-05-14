@@ -104,6 +104,7 @@ class HomeFragment : Fragment() {
             }
             return
         }
+        Log.d("debug", "produckts: $json")
         var productList = JSONArray(json)
         var itemList = ArrayList<ShopItem>()
 
