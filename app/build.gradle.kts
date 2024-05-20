@@ -12,7 +12,10 @@ android {
         minSdk = 29
         targetSdk = 33
         versionCode = 1
-        versionName = "0.0.4"
+        versionName = "0.0.5"
+
+        manifestPlaceholders["auth0Domain"] = "@string/com_auth0_domain"
+        manifestPlaceholders["auth0Scheme"] = "@string/com_auth0_scheme"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -45,6 +48,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
+    implementation("com.auth0.android:auth0:2.9.2")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.jaredrummler:material-spinner:1.3.1")
     testImplementation("junit:junit:4.13.2")

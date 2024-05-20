@@ -6,5 +6,7 @@
     <string name="title_registration">Register</string>
     <string name="title_profile">Profile</string>
     <string name="title_wallet">Digital Wallet</string>
-    <string name="title_cards">My Payment Options</string>
+    <string name="com_auth0_client_id">0U6Wl0G0iGgwu6faBiiI9pVhxRfxHCKF</string>
+    <string name="com_auth0_domain">dev-y84k5kz1xcuc1qy1.us.auth0.com</string>
+    <string name="com_auth0_scheme">demo</string>
 </resources>

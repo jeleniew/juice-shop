@@ -276,6 +276,38 @@ object ApiManager {
         postRequest("api/Users/", requestBody, callback1, false)
     }
 
+    fun register(email: String, password: String, passwordRepeat: String, onSuccess: () -> Unit, onError: (String?) -> Unit) {
+        var requestBody = FormBody.Builder()
+            .add("email", email)
+            .add("password", password)
+            .add("passwordRepeat", passwordRepeat)
+            .build()
+
+        var callback1 = object: Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                onError(e.toString())
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val json = response.body?.string()
+                val responseCode = response.code
+                if (responseCode == 201) {
+                    var status = JSONObject(json).getString("status")
+                    if (status == "success") {
+                        logIn(email, password, true, onSuccess, onError)
+                    } else {
+                        onError(status)
+                    }
+                } else {
+                    var errors = JSONObject(json).getJSONArray("errors")
+                    var message = errors.getJSONObject(0).getString("message")
+                    onError(message)
+                }
+            }
+        }
+        postRequest("api/Users/", requestBody, callback1, false)
+    }
+
     fun getSecurityQuestions(callback: (questionList: List<String>?) -> Unit) {
         var callback1 = object: Callback {
             override fun onFailure(call: Call, e: IOException) {

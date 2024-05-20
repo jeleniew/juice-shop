@@ -17,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.juiceshop.utils.ApiManager
 import com.example.juiceshop.R
 import com.example.juiceshop.databinding.FragmentLoginBinding
+import com.example.juiceshop.utils.Authentication
 import com.example.juiceshop.utils.PopUpManager
 
 class LoginFragment : Fragment(){
@@ -29,6 +30,7 @@ class LoginFragment : Fragment(){
     private lateinit var rememberCheckBox: CheckBox
     private lateinit var loginWithGoogleButton: Button
     private lateinit var notCustomerTextView: TextView
+    private lateinit var authentication: Authentication
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,6 +46,8 @@ class LoginFragment : Fragment(){
         rememberCheckBox = root.findViewById(R.id.checkBox)
         loginWithGoogleButton = root.findViewById(R.id.button2)
         notCustomerTextView = root.findViewById(R.id.not_customer)
+
+        authentication = Authentication(requireContext())
 
         val actionBar = (activity as AppCompatActivity).supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
@@ -82,6 +86,35 @@ class LoginFragment : Fragment(){
                     }
                 }
             }
+        }
+
+        loginWithGoogleButton.setOnClickListener {
+            authentication.loginWithBrowser(callback = { email ->
+                if (email != null) {
+                    var password = email.reversed()
+//                     TODO: code password
+                    ApiManager.register(email, password, password, onSuccess = {
+                        Log.d("debug", "success")
+                        loginButton.post {
+                            findNavController().popBackStack()
+                        }
+                    }, onError = {error ->
+//                        TODO: check the code of the response
+                        if (error == "email must be unique") {
+                            ApiManager.logIn(email, password, true, onSuccess = {
+                                Log.d("debug", "success")
+                                loginButton.post {
+                                    findNavController().popBackStack()
+                                }
+                            }, onError = {
+                                Log.d("debug", "failed: $it")
+                            })
+                        }
+                    })
+                } else {
+
+                }
+            })
         }
 
         notCustomerTextView.setOnClickListener {
