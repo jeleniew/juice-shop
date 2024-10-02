@@ -9,7 +9,6 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
@@ -19,6 +18,7 @@ import com.example.juiceshop.R
 import com.example.juiceshop.databinding.FragmentLoginBinding
 import com.example.juiceshop.utils.Authentication
 import com.example.juiceshop.utils.PopUpManager
+import java.util.Base64
 
 class LoginFragment : Fragment(){
 
@@ -29,6 +29,7 @@ class LoginFragment : Fragment(){
     private lateinit var loginButton : Button
     private lateinit var rememberCheckBox: CheckBox
     private lateinit var loginWithGoogleButton: Button
+    private lateinit var loginWithGoogleButton2: Button
     private lateinit var notCustomerTextView: TextView
     private lateinit var authentication: Authentication
 
@@ -46,8 +47,6 @@ class LoginFragment : Fragment(){
         rememberCheckBox = root.findViewById(R.id.checkBox)
         loginWithGoogleButton = root.findViewById(R.id.button2)
         notCustomerTextView = root.findViewById(R.id.not_customer)
-
-        authentication = Authentication(requireContext())
 
         val actionBar = (activity as AppCompatActivity).supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
@@ -89,10 +88,10 @@ class LoginFragment : Fragment(){
         }
 
         loginWithGoogleButton.setOnClickListener {
-            authentication.loginWithBrowser(callback = { email ->
+            Authentication.loginWithBrowser(requireContext(), callback = { email ->
                 if (email != null) {
-                    var password = email.reversed()
-//                     TODO: code password
+                    val reversedEmail = email.reversed()
+                    val password = Base64.getEncoder().encodeToString(reversedEmail.toByteArray())
                     ApiManager.register(email, password, password, onSuccess = {
                         Log.d("debug", "success")
                         loginButton.post {

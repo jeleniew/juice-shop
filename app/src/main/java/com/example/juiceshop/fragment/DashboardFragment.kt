@@ -14,6 +14,7 @@ import com.example.juiceshop.R
 import com.example.juiceshop.utils.SharedPrefHelper
 import com.example.juiceshop.databinding.FragmentDashboardBinding
 import com.example.juiceshop.adapters.OptionAdapter
+import com.example.juiceshop.utils.Authentication
 
 class DashboardFragment : Fragment() {
 
@@ -42,6 +43,7 @@ class DashboardFragment : Fragment() {
                 Option("Profile"),
                 Option("Digital wallet"),
                 Option("My Payment Options"),
+                Option("My saved addresses"),
                 Option("Log out")
             )
             onCLickList = listOf(
@@ -58,7 +60,11 @@ class DashboardFragment : Fragment() {
                     findNavController().navigate(R.id.action_dashboard_to_cards)
                 },
                 View.OnClickListener { _ ->
+                    findNavController().navigate(R.id.action_dashboard_to_addresses)
+                },
+                View.OnClickListener { _ ->
                     SharedPrefHelper.token = null
+                    Authentication.logout(requireContext())
                     findNavController().navigate(R.id.navigation_dashboard)
                 }
             )

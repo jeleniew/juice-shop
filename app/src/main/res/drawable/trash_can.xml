@@ -1,60 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:height="50dp" android:width="50dp">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/background_color" />
-        </shape>
-    </item>
-    <item android:top="5dp" android:bottom="15dp" android:right="10dp" android:left="10dp">
-        <shape android:shape="oval">
-            <solid android:color="@color/white" />
-        </shape>
-    </item>
-    <item android:top="7dp"  android:bottom="10dp" android:right="12dp" android:left="12dp">
-        <shape android:shape="oval">
-            <solid android:color="@color/background_color" />
-        </shape>
-    </item>
-    <item android:top="10dp">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/background_color" />
-        </shape>
-    </item>
-
-    <item android:top="10dp" android:bottom="5dp" android:left="12dp" android:right="35dp">
-        <rotate android:fromDegrees="-5">
-            <shape android:shape="rectangle">
-                <solid android:color="@color/white" />
-            </shape>
-        </rotate>
-    </item>
-    <item android:top="10dp" android:bottom="5dp" android:left="20dp" android:right="27dp">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/white" />
-        </shape>
-    </item>
-    <item android:top="10dp" android:bottom="5dp" android:left="27dp" android:right="20dp">
-        <shape
-            android:layout_height="wrap_content"
-            android:shape="rectangle">
-            <solid android:color="@color/white" />
-        </shape>
-    </item>
-    <item android:top="10dp" android:bottom="5dp" android:left="35dp" android:right="12dp">
-        <rotate android:fromDegrees="5">
-            <shape android:shape="rectangle">
-                <solid android:color="@color/white" />
-            </shape>
-        </rotate>
-    </item>
-    <item android:top="10dp" android:bottom="37dp" android:left="8dp" android:right="8dp">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/white" />
-        </shape>
-    </item>
-    <item android:top="42dp" android:bottom="5dp" android:left="13dp" android:right="13dp">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/white" />
-        </shape>
-    </item>
-</layer-list>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="960"
+    android:viewportHeight="960"
+    android:tint="?attr/colorControlNormal">
+  <path
+      android:fillColor="@android:color/white"
+      android:pathData="M280,840Q247,840 223.5,816.5Q200,793 200,760L200,240L160,240L160,160L360,160L360,120L600,120L600,160L800,160L800,240L760,240L760,760Q760,793 736.5,816.5Q713,840 680,840L280,840ZM680,240L280,240L280,760Q280,760 280,760Q280,760 280,760L680,760Q680,760 680,760Q680,760 680,760L680,240ZM360,680L440,680L440,320L360,320L360,680ZM520,680L600,680L600,320L520,320L520,680ZM280,240L280,240L280,760Q280,760 280,760Q280,760 280,760L280,760Q280,760 280,760Q280,760 280,760L280,240Z"/>
+</vector>

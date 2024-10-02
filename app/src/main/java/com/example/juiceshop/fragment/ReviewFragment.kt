@@ -141,13 +141,13 @@ class ReviewFragment : Fragment() {
                 val json = response.body?.string()
                 if (response.isSuccessful) {
                     Log.d("debug", "review: $json")
-                    var jsonObject = JSONObject(json)
-                    var dataArray = jsonObject.getJSONArray("data")
-                    var reviewList = ArrayList<Review>()
-                    reviewsTextView.text = "Reviews (${dataArray.length()})"
+                    val jsonObject = JSONObject(json)
+                    val dataArray = jsonObject.getJSONArray("data")
+                    val reviewList = ArrayList<Review>()
+                    requireActivity().runOnUiThread { reviewsTextView.text = "Reviews (${dataArray.length()})" }
                     for(i in 0 until dataArray.length()) {
-                        var reviewJson = dataArray.getJSONObject(i)
-                        var message = reviewJson.getString("message")
+                        val reviewJson = dataArray.getJSONObject(i)
+                        val message = if (reviewJson.has("message")) reviewJson.getString("message") else ""
                         val author = reviewJson.getString("author")
                         val product = reviewJson.getInt("product")
                         val likesCount = reviewJson.getInt("likesCount")
@@ -175,7 +175,7 @@ class ReviewFragment : Fragment() {
     }
 
     fun showReviews(reviewList: List<Review>) {
-        var adapter = ReviewAdapter(requireActivity(), requireContext(), reviewList)
+        val adapter = ReviewAdapter(requireActivity(), requireContext(), reviewList)
         recyclerView.adapter = adapter
     }
 

@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -29,6 +30,7 @@ class BasketFragment : Fragment() {
     private var binding: FragmentBasketBinding? = null
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: BasketItemAdapter
+    private lateinit var checkoutButton: Button
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,8 +41,8 @@ class BasketFragment : Fragment() {
         val root: View = binding!!.root
 
         recyclerView = root.findViewById(R.id.recyclerView)
-
         recyclerView.layoutManager = LinearLayoutManager(context)
+        checkoutButton = root.findViewById(R.id.checkout)
 
         ApiManager.getBasket( object: Callback {
             override fun onFailure(call: Call, e: IOException) {
@@ -80,6 +82,12 @@ class BasketFragment : Fragment() {
                                     Log.e("debug", "Failed to download image for product: $productName")
                                 }
                             }
+                        }
+                        checkoutButton.setOnClickListener {
+                            findNavController().navigate(
+                                R.id.action_basket_to_addresses,
+                                null,
+                            )
                         }
                     }
                 }

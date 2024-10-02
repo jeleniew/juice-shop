@@ -1,7 +1,9 @@
 package com.example.juiceshop.utils
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationAPIClient
@@ -14,22 +16,16 @@ import com.auth0.android.result.UserProfile
 import com.example.juiceshop.R
 import com.auth0.android.callback.Callback
 
-class Authentication {
+object Authentication {
 
-    private var account: Auth0
     private var cachedCredentials: Credentials? = null
     private var cachedUserProfile: UserProfile? = null
-    private var context: Context
 
-    constructor(context: Context) {
-        this.context = context
-        account = Auth0(
+    fun loginWithBrowser(context: Context, callback: (String?) -> Unit) {
+        var account = Auth0(
             context.getString(R.string.com_auth0_client_id),
             context.getString(R.string.com_auth0_domain)
         )
-    }
-
-    fun loginWithBrowser(callback: (String?) -> Unit) {
         WebAuthProvider.login(account)
             .withScheme(context.getString(R.string.com_auth0_scheme))
             .withScope("openid profile email read:current_user update:current_user_metadata")
@@ -52,7 +48,11 @@ class Authentication {
             })
     }
 
-    private fun logout() {
+    fun logout(context: Context) {
+        var account = Auth0(
+            context.getString(R.string.com_auth0_client_id),
+            context.getString(R.string.com_auth0_domain)
+        )
         WebAuthProvider.logout(account)
             .withScheme(context.getString(R.string.com_auth0_scheme))
             .start(context, object : Callback<Void?, AuthenticationException> {

@@ -62,7 +62,7 @@ class CardsFragment : Fragment() {
         return root
     }
 
-    fun showCards(cardList: List<CreditCard>) {
+    private fun showCards(cardList: List<CreditCard>) {
         activity?.runOnUiThread {
             adapter = CreditCardAdapter(requireContext(), cardList)
             recyclerView.adapter = adapter

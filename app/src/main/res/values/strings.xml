@@ -8,5 +8,7 @@
     <string name="title_wallet">Digital Wallet</string>
     <string name="com_auth0_client_id">0U6Wl0G0iGgwu6faBiiI9pVhxRfxHCKF</string>
     <string name="com_auth0_domain">dev-y84k5kz1xcuc1qy1.us.auth0.com</string>
+<!--    <string name="com_auth0_domain">juice-shop-mobile.com</string>-->
     <string name="com_auth0_scheme">demo</string>
+<!--    <string name="com_auth0_client_id">173712475075-2u32rqhl825kt3pvm8q9b0bt5q0amm7b.apps.googleusercontent.com</string>-->
 </resources>

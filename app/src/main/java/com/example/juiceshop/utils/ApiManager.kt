@@ -451,17 +451,7 @@ object ApiManager {
         val requestBody = FormBody.Builder()
             .add("id", shopItemId)
             .build()
-Log.d("debug", "shopItemId: $shopItemId")
-//        var url = URL + "rest/products/reviews"
-//        var client = OkHttpClient()
-//
-//        var request = Request.Builder()
-//            .url(url)
-//            .header("Cookie", getTokenJson())
-//            .post(requestBody)
-//            .build()
-//
-//        client.newCall(request).enqueue(callback)
+
         postRequest("rest/products/reviews", requestBody, callback, true)
     }
 
@@ -520,6 +510,27 @@ Log.d("debug", "shopItemId: $shopItemId")
     }
 
     fun getOrderHistory() {}
+
+
+    fun getAddresses(callback: Callback) {
+        getRequest("api/Addresss", callback, true)
+    }
+
+    fun addAddress(country: String, name: String, mobileNumber: Long, zipCode: String, address: String, city: String, state: String, callback: Callback) {
+//        {"country":"Poland","fullName":"WIki","mobileNum":1111112137,"zipCode":"12-345","streetAddress":"kkkkkkkkkkk","city":"kk","state":"k"}
+        val jsonObject = JSONObject().apply {
+            put("country", country)
+            put("fullName", name)
+            put("mobileNum", mobileNumber)
+            put("zipCode", zipCode)
+            put("streetAddress", address)
+            put("city", city)
+            put("state", state)
+        }
+
+        val requestBody = RequestBody.create("application/json".toMediaTypeOrNull(), jsonObject.toString())
+        postRequest("api/Addresss", requestBody, callback, true)
+    }
 
 
 }

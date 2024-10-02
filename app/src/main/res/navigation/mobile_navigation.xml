@@ -48,6 +48,10 @@
         <action
             android:id="@+id/action_dashboard_to_cards"
             app:destination="@id/navigation_cards"/>
+        <action
+            android:id="@+id/action_dashboard_to_addresses"
+            app:destination="@id/navigation_addresses"/>
+
     </fragment>
 
     <fragment
@@ -79,7 +83,12 @@
         android:id="@+id/navigation_basket"
         android:name="com.example.juiceshop.fragment.BasketFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_basket" />
+        tools:layout="@layout/fragment_basket" >
+
+        <action
+            android:id="@+id/action_basket_to_addresses"
+            app:destination="@id/navigation_addresses" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_profile"
@@ -109,5 +118,23 @@
         android:name="com.example.juiceshop.fragment.AddCardFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_add_card" />
+
+    <fragment
+        android:id="@+id/navigation_addresses"
+        android:name="com.example.juiceshop.fragment.AddressesFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_addresses" >
+
+        <action
+            android:id="@+id/action_addresses_to_add_addresses"
+            app:destination="@id/navigation_add_new_address" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_add_new_address"
+        android:name="com.example.juiceshop.fragment.AddNewAddressFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_add_new_address" />
 
 </navigation>
